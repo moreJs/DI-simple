@@ -1,0 +1,30 @@
+{
+  "name": "di-simple",
+  "version": "1.0.0",
+  "description": "简易版本的依赖注入系统",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "ts": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moreJs/DI-simple.git"
+  },
+  "keywords": [
+    "依赖注入"
+  ],
+  "author": "huangjianlei.cool@163.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/moreJs/DI-simple/issues"
+  },
+  "homepage": "https://github.com/moreJs/DI-simple#readme",
+  "devDependencies": {
+    "typescript": "^2.0.10"
+  },
+  "dependencies": {
+    "is": "^3.2.0",
+    "reflect-metadata": "^0.1.8"
+  }
+}
