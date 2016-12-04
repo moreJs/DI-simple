@@ -8,7 +8,8 @@ export { Injector };
 
 export const Inject = token => target => {
     let existingInnerDependenceMetadataKey: string[] = getOwnMetadata(innerDependenceMetadataKey, target) || [];
-    existingInnerDependenceMetadataKey.push(token);
+    // 这个顺序很奇怪相反的
+    existingInnerDependenceMetadataKey.unshift(token);
     Reflect.defineMetadata(innerDependenceMetadataKey, existingInnerDependenceMetadataKey, target);
 }
 

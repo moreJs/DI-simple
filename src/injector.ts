@@ -23,7 +23,7 @@ export class Injector{
     normalize(providers) {
         return providers.map(provider => {
             provider = provider || {};
-            if(is.object(provider) && !provider.provider) {
+            if(!provider.provider) {
                 provider = {
                     token: provider.name,
                     useClass: provider,
@@ -38,19 +38,25 @@ export class Injector{
         1: 检查是否是循环引用
      */
     judgeIsCycleDeps(provider) {
+        let self = this;
         // 依赖表 
-        let depsMap = new map();
+        let depsMap = new Map();
         // 默认为false
         let isCycleDeps = false;
 
+        // deps 是以 token 的形式
         const _judgeIsCycleDepsByDeps = deps => {
             // 若已经循环依赖，直接返回
             if(isCycleDeps){
                 return;
             }
-            deps.forEach( item => _judgeIsCycleDepsBySelf(item) );
+            deps.forEach(depToken => {
+                // 先找到 item, 依据 token
+                let item = self.getTargetProvider(depToken);
+                _judgeIsCycleDepsBySelf(item)
+            });
         };
-
+        // 接受的是 item
         const _judgeIsCycleDepsBySelf = item => {
             let { token, deps } = item;
             let has = depsMap.has(token);
@@ -77,6 +83,8 @@ export class Injector{
         return ret && ret[0];
     }
     createSingleton(token) {
+        let self = this;
+
         let target = this.getTargetProvider(token);
         let isCycleDeps = this.judgeIsCycleDeps(target);
 
@@ -87,7 +95,7 @@ export class Injector{
         const _makeValue = (item, deps) => {
             let { token, useClass, useValue, useFactory} = item;
             if(useClass) {
-                return new useClass(deps);
+                return new useClass(...deps);
             }else if(useValue) {
                 return useValue;
             }else if(useFactory) {
@@ -97,20 +105,21 @@ export class Injector{
                 throw `${token} provider 是非法的`;
             }   
         }
-        // 创建对象
+        // 接受的是item, 创建对象
         const _createSingleton = item => {
             let { token, useClass, useValue, useFactory, deps} = item;
             if(!deps || deps.length == 0) {
                 return _makeValue(item);
             }
-            let arguments = [];
+            let _arguments = [];
             deps.forEach(dep => {
-                arguments.push(_createSingleton(dep));
+                let depItem = self.getTargetProvider(dep);
+                _arguments.push(_createSingleton(depItem));
             });
-            return _makeValue(item, deps);
+            return _makeValue(item, _arguments);
         };
 
-        _createSingleton(target);
+        return _createSingleton(target);
     }
 
     get(token) {
