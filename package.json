@@ -1,6 +1,6 @@
 {
   "name": "di-simple",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "简易版本的依赖注入系统",
   "main": "lib/index.js",
   "scripts": {

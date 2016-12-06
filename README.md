@@ -49,4 +49,11 @@ const a2 = injector.get('A');
 console.log(`output: ${ a1 == a2 }`);
 ``` 
 
+
+## todo list
+
+- hierarchical dependency injectors
+- fix token namespace conflict
+- provider factory 
+
 更多使用，参考测试用例以及demo目录下的示例
